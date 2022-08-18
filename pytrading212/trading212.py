@@ -1,6 +1,7 @@
 # API for Trading212 Platform
 
-# Author: Francesco Ambrosini
+# Author: Francesco Ambrosini, Kun Situ
+# Amend to new selenium method using find_element(By.NAME)
 
 import json
 import logging
@@ -93,6 +94,7 @@ class Trading212:
 
         # get session cookie
         cookies = self.driver.get_cookies()
+        # print(cookies)
         if cookies is not None:
             for cookie in cookies:
                 # Get appropriate cookie for this session, live or demo
@@ -187,17 +189,19 @@ class Trading212:
             (By.CLASS_NAME, right_sidepanel_portfolio_class)
         )
         WebDriverWait(self.driver, 30).until(condition)
-        self.driver.find_element(By.CLASS_NAME, right_sidepanel_portfolio_class).click()
+        # test = self.driver.find_element(By.CLASS_NAME, right_sidepanel_portfolio_class)
+        # print(test)
+        # self.driver.find_element(By.CLASS_NAME, right_sidepanel_portfolio_class).click()
 
         positions = []
         try:
             # click on investments
-            self.driver.find_element(By.CLASS_NAME, 'investment-tab').click()
+            # self.driver.find_element(By.CLASS_NAME, 'investment-tab').click()
             for item in self.driver.find_elements(By.CLASS_NAME, "investment-item"):
                 ticker = item.get_attribute("data-qa-item")
-                value = item.find_element(By.CLASS_NAME, "total-value").text
-                quantity = item.find_element(By.CLASS_NAME, "quantity").text
-                total_return = item.find_element(By.CLASS_NAME, "return").text
+                value = item.find_element(By.CLASS_NAME,"total-value").text
+                quantity = item.find_element(By.CLASS_NAME,"quantity").text
+                total_return = item.find_element(By.CLASS_NAME,"return").text
                 position = Position(ticker, value, quantity, total_return)
                 positions.append(position.__dict__)
         except Exception as e:
